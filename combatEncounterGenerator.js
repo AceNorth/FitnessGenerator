@@ -3,67 +3,57 @@ const utils = require('./utils');
 
 const {
     BASELINE_CHECK_DIFFICULTY,
-    BASELINE_NUMBER_OF_SUCCESSFUL_CHECKS,
 } = constants;
 
 const {
-    doesThisThingHappen,
     generateRandomColor,
-    maybeIncreaseNumber,
+    getResultFromGeneratorWithRerolls,
 } = utils;
 
-const generateOpponentList = (checksToPassEncounter, highestCheckDifficulty, isBoss) => {
-  let remainingChecks = checksToPassEncounter - 1;
-  const unitList = [{
-      HP: 1,
-      difficulty: highestCheckDifficulty,
-      weakness: doesThisThingHappen(50) ? generateRandomColor() : null,
-  }];
-  // break the HP out into units, each with at least 1 HP
-  // give each unit a difficulty between BASELINE_CHECK_DIFFICULTY and highestCheckDifficulty
-  // and potentially give it a weakness
-  while (remainingChecks) {
-      remainingChecks--;
-      // either create a new unit or strengthen an existing unit
-      if (doesThisThingHappen(isBoss ? 90 : 50)) {
-          unitList[Math.floor(Math.random() * unitList.length)].HP += 1;
-      } else {
-          unitList.push({
-              HP: 1,
-              difficulty: Math.floor(Math.random() * (highestCheckDifficulty - BASELINE_CHECK_DIFFICULTY + 1) + BASELINE_CHECK_DIFFICULTY),
-              weakness: doesThisThingHappen(50) ? generateRandomColor() : null,
-          })
-      };
-  }
-  return unitList.map(unit => {
-      let unitString = `${unit.HP}HP, ${unit.difficulty} difficulty`;
-      if (unit.weakness) unitString += `, weak to ${unit.weakness}`;
-      return unitString;
-  })
+const generateToHit = (number) => {
+    if (number < 51) {
+        return BASELINE_CHECK_DIFFICULTY;
+    } else if (number < 76) {
+        return BASELINE_CHECK_DIFFICULTY + 1;
+    } else if (number < 91) {
+        return BASELINE_CHECK_DIFFICULTY + 2;
+    } else if (number < 100) {
+        return BASELINE_CHECK_DIFFICULTY + 3;
+    }
+    return BASELINE_CHECK_DIFFICULTY + 4;
 };
 
+const generateChanceToRun = (number) => {
+    if (number < 51) {
+        return 90;
+    } else if (number < 76) {
+        return 75;
+    } else if (number < 91) {
+        return 50;
+    } else if (number < 99) {
+        return 30;
+    }
+    return 10;
+};
+
+/*
+
+Opponent is:
+
+- Difficulty of hitting them
+- Chance they will run away when hit
+- TODO: Anything that changes after X hits maybe?
+
+So when you hit an opponent, you check if they run away. If not, you get +1 reroll
+next time you hit them. Later on we can add triggers to guarantee something happens after X hits.
+
+*/
+
 const generateCombatEncounter = (
-  chanceMoreChecks, // lower in earlier encounters
-  chanceHigherDifficultyChecks, // lower in earlier encounters
-  nastinessPoints, // for particularly bad situations (bosses, or tight scrapes for the player)
-  // sort of an indication of the character being caught off guard or unprepared,
-  // a measure of uncertainty/variation
-  isBoss, // whether all the HP/Difficulty increases should go to a single unit
+    rerollsForDifficulty,
+    rerollsForChanceTheyWillRunAwayWhenHit,
   ) => {
-  let checksToPassEncounter = maybeIncreaseNumber(BASELINE_NUMBER_OF_SUCCESSFUL_CHECKS, chanceMoreChecks);
-  let highestCheckDifficulty = maybeIncreaseNumber(BASELINE_CHECK_DIFFICULTY, chanceHigherDifficultyChecks);
-  let remainingNastinessPoints = nastinessPoints;
-
-  while (remainingNastinessPoints && doesThisThingHappen(50)) {
-      remainingNastinessPoints--;
-      // check to increase one of the values again
-      doesThisThingHappen(50)
-          ? checksToPassEncounter  = maybeIncreaseNumber(checksToPassEncounter, chanceMoreChecks)
-          : highestCheckDifficulty = maybeIncreaseNumber(highestCheckDifficulty, chanceHigherDifficultyChecks)
-  }
-
-  // break the HP out into units, and give each unit a difficulty between BASELINE_CHECK_DIFFICULTY and highestCheckDifficulty
-  return generateOpponentList(checksToPassEncounter, highestCheckDifficulty, isBoss);
+  return `${getResultFromGeneratorWithRerolls(generateToHit, rerollsForDifficulty)} to hit, ${getResultFromGeneratorWithRerolls(generateChanceToRun, rerollsForChanceTheyWillRunAwayWhenHit)}% chance of running when hit, weak to ${generateRandomColor()}`;
 };
 
 module.exports = {
