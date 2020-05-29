@@ -11,11 +11,11 @@ const {
 } = utils;
 
 const generateCheckDifficulty = (number) => {
-    if (number < 51) {
+    if (number < 66) {
         return BASELINE_CHECK_DIFFICULTY;
-    } else if (number < 76) {
+    } else if (number < 86) {
         return BASELINE_CHECK_DIFFICULTY + 1;
-    } else if (number < 91) {
+    } else if (number < 95) {
         return BASELINE_CHECK_DIFFICULTY + 2;
     } else if (number < 99) {
         return BASELINE_CHECK_DIFFICULTY + 3;

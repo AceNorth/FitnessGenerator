@@ -15,15 +15,15 @@ const optionDescriptors = ["COMBAT", "NONCOMBAT"];
 const generateCombatDifficultyDescription = (stage) => {
     // return a description indicating the # of rerolls we'll use
     // when generating an opponent's difficulty to hit
-    // minimum 1, maximum (stage +1)
-    const numRerolls = 1 + Math.floor(Math.random() * (stage + 1));
-    if (numRerolls === 1) {
+    // minimum 0, maximum (stage +1)
+    const numRerolls = Math.floor(Math.random() * (stage + 1));
+    if (numRerolls === 0) {
         return "WEAK (0)";
-    } else if (numRerolls === 2) {
+    } else if (numRerolls === 1) {
         return  "TRAINED (1)";
-    } else if (numRerolls === 3) {
+    } else if (numRerolls === 2) {
         return  "INTIMIDATING (2)";
-    } else if (numRerolls === 4) {
+    } else if (numRerolls === 3) {
         return  "SCARY (3)";
     };
     // this shouldn't be possible but! Let's see if I did something wrong
@@ -35,13 +35,13 @@ const generateCombatToughnessDescription = (stage) => {
     // when generating an opponent's likelihood to run away when hit
     // minimum 1, maximum (stage +1)
     const numRerolls = 1 + Math.floor(Math.random() * (stage + 1));
-    if (numRerolls === 1) {
+    if (numRerolls === 0) {
         return "COWARDLY (0)";
-    } else if (numRerolls === 2) {
+    } else if (numRerolls === 1) {
         return  "STEADFAST (1)";
-    } else if (numRerolls === 3) {
+    } else if (numRerolls === 2) {
         return  "BRAVE (2)";
-    } else if (numRerolls === 4) {
+    } else if (numRerolls === 3) {
         return  "DISCIPLINED (3)";
     };
     // this shouldn't be possible but! Let's see if I did something wrong
@@ -54,13 +54,13 @@ const generateNonCombatDifficultyDescription = (stage) => {
     // when generating the difficulty of hazards
     // minimum 1, maximum (stage +1)
     const numRerolls = 1 + Math.floor(Math.random() * (stage + 1));
-    if (numRerolls === 1) {
+    if (numRerolls === 0) {
         return "SIMPLE (0)";
-    } else if (numRerolls === 2) {
+    } else if (numRerolls === 1) {
         return  "TRICKY (1)";
-    } else if (numRerolls === 3) {
+    } else if (numRerolls === 2) {
         return  "DIFFICULT (2)";
-    } else if (numRerolls === 4) {
+    } else if (numRerolls === 3) {
         return  "DAUNTING (3)";
     };
     // this shouldn't be possible but! Let's see if I did something wrong
@@ -82,3 +82,7 @@ const generateNextOptions = (missionStage = 1) => {
     
 const missionStage = Number(process.argv[2]);
 console.log(generateNextOptions(missionStage));
+
+// console.log(generateCombatEncounter(2,2));
+
+// console.log(generateNonCombatEncounter(0,0));

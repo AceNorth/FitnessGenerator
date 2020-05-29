@@ -11,11 +11,11 @@ const {
 } = utils;
 
 const generateToHit = (number) => {
-    if (number < 51) {
+    if (number < 66) {
         return BASELINE_CHECK_DIFFICULTY;
-    } else if (number < 76) {
+    } else if (number < 86) {
         return BASELINE_CHECK_DIFFICULTY + 1;
-    } else if (number < 91) {
+    } else if (number < 95) {
         return BASELINE_CHECK_DIFFICULTY + 2;
     } else if (number < 100) {
         return BASELINE_CHECK_DIFFICULTY + 3;
@@ -24,11 +24,11 @@ const generateToHit = (number) => {
 };
 
 const generateChanceToRun = (number) => {
-    if (number < 51) {
+    if (number < 66) {
         return 90;
-    } else if (number < 76) {
+    } else if (number < 86) {
         return 75;
-    } else if (number < 91) {
+    } else if (number < 95) {
         return 50;
     } else if (number < 99) {
         return 30;
