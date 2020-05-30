@@ -27,7 +27,7 @@ const generateChanceToRun = (number) => {
     if (number < 66) {
         return 90;
     } else if (number < 86) {
-        return 75;
+        return 70;
     } else if (number < 95) {
         return 50;
     } else if (number < 99) {
